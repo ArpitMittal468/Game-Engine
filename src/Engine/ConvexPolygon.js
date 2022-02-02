@@ -1,54 +1,80 @@
+import Entity from "./Entity"
 import { Vector } from "./Vector"
 
-export default class ConvexPolygon {
-    constructor(center, verticeList) {
-        this.center = new Vector(...center)
+export default class ConvexPolygon extends Entity {
+    /**
+     * @param {number} centerX position on x Axis
+     * @param {number} centerY postion on y Axis
+     * @param {Array<Array<number>>} verticeList Array of vertices of form [x, y] relate to center
+    */
+    constructor(centerX, centerY, verticeList) {
 
-        // this.center = new Vector(125 + 200, 125 + 200)
-        this.vertice = [
-            new Vector(-50, -50).add(this.center),
-            new Vector(50, -50).add(this.center),
-            new Vector(50, 50).add(this.center),
-            new Vector(-50, 50).add(this.center)
-        ]
-        this.normals = []
+        super()
 
+        if (typeof centerX !== 'number' || typeof centerY !== 'number')
+            throw 'Center points must by numbers'
 
-        this.rotationAngle = Math.random() * 0.10
-        this.verticeLenght = this.vertice.length
+        this.center = new Vector(centerX, centerY)
+        this.vertice = []
 
-        this.collided = false
+        for (let i = 0; i < verticeList.length; i++) {
+            if (!(verticeList[i] instanceof Array)
+                || verticeList[i].length < 2
+                || typeof verticeList[i][0] !== "number"
+                || typeof verticeList[i][1] !== 'number')
+                throw 'verticeList has a wrong type'
+
+            this.vertice.push(new Vector(verticeList[i][0], verticeList[i][1]).add(this.center))
+        }
+
+        this.verticeLength = this.vertice.length
+
+        if (this.verticeLength < 3)
+            throw 'Must have atleast 3 sides'
+
+        this.rotationAngle = 0
+        this.rotationAllowed = false
+        this.isColliding = false
+        this.wireFrameAllowed = false
+        this.position = this.center
     }
 
-    ping(ctx) {
-        this.update()
-        this.render(ctx)
-    }
     update() {
-        // if (!this.collided)
-        this.rotation()
+
+        if (this.rotationAllowed)
+            this.rotate()
+
+        for (let v of this.vertice) {
+            v.add(this.velocity)
+        }
+
+        super.update()
+
     }
 
     render(ctx) {
-        for (let i = 0; i < this.vertice.length; i++) {
-            ctx.beginPath()
-            ctx.moveTo(...this.vertice[i].toArray())
-            ctx.lineTo(...this.vertice[(i + 1) % this.verticeLenght].toArray())
-            ctx.strokeStyle = (this.collided ? 'red' : 'black')
-            ctx.stroke()
-        }
-        ctx.beginPath()
-        ctx.moveTo(...this.center.toArray())
-        ctx.lineTo(...this.vertice[0].toArray())
-        ctx.stroke()
 
-        ctx.strokeStyle = 'black'
+        if (this.wireFrameAllowed) {
+
+            for (let i = 0; i < this.vertice.length; i++) {
+                ctx.beginPath()
+                ctx.moveTo(...this.vertice[i].toArray())
+                ctx.lineTo(...this.vertice[(i + 1) % this.verticeLength].toArray())
+                ctx.strokeStyle = (this.isColliding ? 'red' : 'black')
+                ctx.stroke()
+            }
+            ctx.beginPath()
+            ctx.moveTo(...this.center.toArray())
+            ctx.lineTo(...this.vertice[0].toArray())
+            ctx.stroke()
+
+            ctx.strokeStyle = 'black'
+        }
     }
 
+    rotate() {
 
-    rotation() {
-
-        for (let i = 0; i < this.verticeLenght; i++) {
+        for (let i = 0; i < this.verticeLength; i++) {
             let v = this.vertice[i]
             v.sub(this.center)
             v.set(
@@ -59,29 +85,4 @@ export default class ConvexPolygon {
         }
     }
 
-
-    keyPress(key) {
-        switch (key) {
-            case 'ArrowRight':
-                for (let v of this.vertice)
-                    v.add(new Vector(2, 0))
-                this.center.add(new Vector(2, 0))
-                break
-            case 'ArrowLeft':
-                for (let v of this.vertice)
-                    v.add(new Vector(-2, 0))
-                this.center.add(new Vector(-2, 0))
-                break
-            case 'ArrowUp':
-                for (let v of this.vertice)
-                    v.add(new Vector(0, -2))
-                this.center.add(new Vector(0, -2))
-                break
-            case 'ArrowDown':
-                for (let v of this.vertice)
-                    v.add(new Vector(0, 2))
-                this.center.add(new Vector(0, 2))
-                break
-        }
-    }
 }

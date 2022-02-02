@@ -1,6 +1,7 @@
 import { Vector, VectorMath } from "./Vector";
 
-export class Entity {
+export default class Entity {
+
     constructor() {
         this.position = new Vector()
         this.velocity = new Vector()
@@ -14,4 +15,8 @@ export class Entity {
         )
     }
     
+    update() {
+        this.position.add(this.velocity)
+        this.velocity.add(this.acceleration)
+    }
 }

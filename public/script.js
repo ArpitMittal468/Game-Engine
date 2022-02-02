@@ -1,14 +1,10 @@
-const { GameEnige } = require('../src/Engine/GameEngine');
+const { default: NewBody } = require('../src/Engine/NewBody.js');
+import { Engine } from '../src/Engine/Engine';
 
-import ConvexPolygon from '../src/Engine/ConvexPolygon';
+window.engine = new Engine('myCanvas', 800, 600);
 
-window.engine = new GameEnige('myCanvas', 800, 600);
-
-
-engine.pushObj(new ConvexPolygon([200, 250]))
-engine.pushObj(new ConvexPolygon([400, 200]))
-engine.pushObj(new ConvexPolygon([500, 600]))
-engine.pushObj(new ConvexPolygon([600, 700]))
+engine.pushObj(new NewBody())
+engine.pushObj(new NewBody())
 
 
 let runningStatus = false;

@@ -9,6 +9,7 @@ export class Vector {
     }
 
     /**
+     * 
      * @param {Vector} vec 
     */
     add(vec) {
@@ -84,7 +85,7 @@ export class Vector {
     limit(x) {
         if (this.mag() > x)
             this.setMag(x)
-        
+
         return this
     }
 }
@@ -108,7 +109,7 @@ export const VectorMath = {
     /**
      * @param {Vector} vec
     */
-    clone(vec){
+    clone(vec) {
         return new Vector(vec.X, vec.Y)
     }
 }
