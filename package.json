@@ -1,0 +1,23 @@
+{
+  "name": "physicsengine",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    
+    "start": "node server.js",
+    "webpack": "webpack --config webpack.config.js",
+    "debug": "set DEBUG=physicsengine:* && npm start",
+    "build": "nodemon --ignore '/public' build.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "debug": "^4.3.3",
+    "express": "^4.17.2",
+    "nodemon": "^2.0.15",
+    "webpack": "^5.67.0"
+  },
+  "devDependencies": {
+    "webpack-cli": "^4.9.2"
+  }
+}
