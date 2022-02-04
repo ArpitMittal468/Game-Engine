@@ -3,30 +3,16 @@ import Vector from '../Vectors/Vector';
 
 export default class NewBody extends ConvexPolygon {
     constructor() {
+    
         super(Math.random() * 500 + 10, 100, [
-            [3, -20],
-            [-3, -20],
-            [-9, -18],
-            [-14, -14],
-            [-18, -9],
-            [-20, -3],
-            [-20, 3],
-            [-18, 9],
-            [-14, 14],
-            [-9, 18],
-            [-3, 20],
-            [3, 20],
-            [9, 18],
-            [14, 14],
-            [18, 9],
-            [20, 3],
-            [20, -3],
-            [18, -9],
-            [14, -14],
-            [9, -18],
+            [-20, -20],
+            [20, -20],
+            [20, 20],
+            [-20, 20],
         ])
-        // this.rotationAllowed = true
-        // this.rotationAngle = 0.01
+
+        this.rotationAllowed = true
+        this.rotationAngle = Math.random()/5
         this.wireFrameAllowed = true
         this.goingBack = false
     }

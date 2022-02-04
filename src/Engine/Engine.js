@@ -1,6 +1,6 @@
-import SAT from "./Collisions/SAT";
+import Detector from "./Collisions/Detector";
 
-export  class Engine {
+export class Engine {
     constructor(canvasId, canvasWidht, canvasHeight) {
         this.canvas = document.getElementById(canvasId);
         this.canvasHeight = canvasHeight
@@ -71,29 +71,8 @@ export  class Engine {
         this.engineStatus = 0
     }
 
-
     collisionDetection() {
-
-        let collisionProfileGlobal = Array(this.objectList.length).fill(false)
-
-        for (let i = 0; i < this.objectList.length; i++) {
-
-            for (let j = i + 1; j < this.objectList.length; j++) {
-
-                let ob1 = this.objectList[i]
-                let ob2 = this.objectList[j]
-
-                let result = SAT(ob1, ob2) && SAT(ob2, ob1)
-
-                collisionProfileGlobal[j] ||= result
-                collisionProfileGlobal[i] ||= result
-            }
-        }
-
-        for (let i = 0; i < this.objectList.length; i++) {
-            const element = this.objectList[i];
-            element.isColliding = collisionProfileGlobal[i]
-        }
+        Detector(this.objectList)
     }
 }
 

@@ -88,6 +88,18 @@ export default class Vector {
 
         return this
     }
+    invert() {
+        this.X *= -1
+        this.Y *= -1
+        return this
+    }
+
+    /**
+    * @param {Vector} vec
+    */
+    dot(vec) {
+        return this.X * vec.X + this.Y * vec.Y
+    }
 }
 
 

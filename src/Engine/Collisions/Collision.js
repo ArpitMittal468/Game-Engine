@@ -2,7 +2,13 @@ import ConvexPolygon from "../Bodys/ConvexPolygon"
 import Vector from "../Vectors/Vector"
 
 export default class Collision {
-
+    
+    /**
+     * @param {ConvexPolygon} poly1
+     * @param {ConvexPolygon} poly2
+     * @param {Vector} normal
+     * @param {number} depth
+     */
     constructor(poly1, poly2, normal, depth) {
         if (!(poly1 instanceof ConvexPolygon) || !(poly2 instanceof ConvexPolygon))
             throw 'Parameter must be of types ConvexPolygon'

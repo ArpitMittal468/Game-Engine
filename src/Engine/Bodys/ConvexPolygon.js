@@ -37,6 +37,7 @@ export default class ConvexPolygon extends Entity {
         this.isColliding = false
         this.wireFrameAllowed = false
         this.position = this.center
+        this.isStatic = false
     }
 
     update() {
@@ -84,5 +85,12 @@ export default class ConvexPolygon extends Entity {
             v.add(this.center)
         }
     }
-
+    /**
+     * @param {Vector} vec
+    */
+    addToPosition(vec) {
+        this.center.add(vec)
+        for (const vertice of this.vertice)
+            vertice.add(vec)
+    }
 }
