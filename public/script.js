@@ -1,5 +1,7 @@
-const { default: NewBody } = require('../src/Engine/NewBody.js');
+import NewBody from '../src/Engine/Bodys/NewBody'
+
 import { Engine } from '../src/Engine/Engine';
+
 
 window.engine = new Engine('myCanvas', 800, 600);
 

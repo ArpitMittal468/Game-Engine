@@ -1,5 +1,5 @@
 import ConvexPolygon from './ConvexPolygon';
-const { Vector, VectorMath } = require('./Vector');
+import Vector from '../Vectors/Vector';
 
 export default class NewBody extends ConvexPolygon {
     constructor() {
@@ -38,20 +38,6 @@ export default class NewBody extends ConvexPolygon {
 
     update() {
         super.update()
-
-        if (this.isColliding) {
-            if (!this.goingBack) {
-
-                this.velocity.setMag(
-                    -0.5 * this.velocity.mag()
-                )
-                this.goingBack = true
-            }
-        }
-        else {
-            this.goingBack = false
-        }
-        console.log(this.goingBack, this.velocity)
     }
 
     /**
@@ -70,8 +56,8 @@ export default class NewBody extends ConvexPolygon {
         switch (key) {
             case 'ArrowRight':
 
-                // this.velocity.add(new Vector(1, 0))
-                this.acceleration.add(new Vector(1, 0).setMag(0.01))
+                this.velocity.add(new Vector(1, 0))
+                // this.acceleration.add(new Vector(1, 0).setMag(0.01))
                 break
             case 'ArrowLeft':
 

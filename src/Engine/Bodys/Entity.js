@@ -1,4 +1,5 @@
-import { Vector, VectorMath } from "./Vector";
+import VectorMath from "../Vectors/VectorMath";
+import Vector from "../Vectors/Vector";
 
 export default class Entity {
 

@@ -1,4 +1,4 @@
-import SAT from "./SAT";
+import SAT from "./Collisions/SAT";
 
 export  class Engine {
     constructor(canvasId, canvasWidht, canvasHeight) {
@@ -33,6 +33,7 @@ export  class Engine {
     }
 
     updateNextFrame() {
+        // Clear the old frame
         this._2dCtx.clearRect(0, 0, this.ratio * this.canvasWidht, this.ratio * this.canvasHeight)
 
         this.collisionDetection()

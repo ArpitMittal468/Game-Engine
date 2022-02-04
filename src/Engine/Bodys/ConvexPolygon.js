@@ -1,5 +1,5 @@
 import Entity from "./Entity"
-import { Vector } from "./Vector"
+import Vector from "../Vectors/Vector"
 
 export default class ConvexPolygon extends Entity {
     /**

@@ -1,5 +1,5 @@
-import ConvexPolygon from "./ConvexPolygon";
-import { VectorMath } from "./Vector";
+import ConvexPolygon from "../Bodys/ConvexPolygon";
+import VectorMath from "../Vectors/VectorMath";
 
 /**
  * @param {ConvexPolygon} poly1
