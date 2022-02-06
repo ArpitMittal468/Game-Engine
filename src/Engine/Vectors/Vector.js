@@ -100,6 +100,9 @@ export default class Vector {
     dot(vec) {
         return this.X * vec.X + this.Y * vec.Y
     }
+    clone(){
+        return new Vector(this.X, this.Y)
+    }
 }
 
 

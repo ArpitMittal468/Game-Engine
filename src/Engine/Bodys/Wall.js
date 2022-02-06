@@ -7,6 +7,7 @@ export default class Wall extends ConvexPolygon {
 
         this.wireFrameAllowed = true
         this.isStatic = true
+        this.mass = Infinity
     }
 
     ping(ctx) {

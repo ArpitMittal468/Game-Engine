@@ -9,6 +9,7 @@ export default class Resolver {
          * @type {Array<Collision>}
         */
         this.collisionList = []
+        this.shiftOffest = 0
     }
 
     /**
@@ -25,41 +26,52 @@ export default class Resolver {
         for (const collision of this.collisionList) {
 
             // resolve logic
-            // console.log(collision);
-            let x = VectorMath.sub(collision.poly2.position, collision.poly1.position);
 
-            if (collision.collisionNormal.dot(x) > 0) {
-                collision.collisionNormal.invert()
-            }
+            let {
+                poly1, poly2, collisionDepth, collisionNormal
+            } = collision;
 
-            if (collision.poly1.isStatic) {
-                collision.collisionNormal.normalize().mul(collision.collisionDepth)
-                collision.poly2.addToPosition(collision.collisionNormal.invert())
-                collision.poly2.velocity.invert()
+            if (poly1.isStatic && poly2.isStatic) continue;
+
+            if (collisionNormal.dot(VectorMath.sub(poly2.position, poly1.position)) < 0) { collisionNormal.invert() }
+            collisionNormal.normalize()
+
+            if (poly1.isStatic) {
+                collisionNormal.mul(collisionDepth + this.shiftOffest)
+                poly2.addToPosition(collisionNormal)
+
             }
-            else if (collision.poly2.isStatic) {
-                collision.collisionNormal.normalize().mul(collision.collisionDepth)
-                collision.poly1.addToPosition(collision.collisionNormal)
-                collision.collisionNormal.normalize()
-                let v = VectorMath.sub(
-                    collision.collisionNormal.mul(
-                        2 * collision.collisionNormal.dot(collision.poly1.velocity)
-                    ),
-                    collision.poly1.velocity,
-                ).mul(-1)
-                collision.poly1.velocity.set(...v.toArray())
+            else if (poly2.isStatic) {
+                collisionNormal.mul(collisionDepth + this.shiftOffest)
+                poly1.addToPosition(collisionNormal.invert())
+                collisionNormal.invert()
             }
             else {
 
-                collision.collisionNormal.normalize().mul(collision.collisionDepth / 2)
-                collision.poly1.addToPosition(collision.collisionNormal)
-                collision.poly2.addToPosition(collision.collisionNormal.invert())
+                collisionNormal.mul(collisionDepth / 2 + this.shiftOffest / 2)
+                poly2.addToPosition(collisionNormal)
+                poly1.addToPosition(collisionNormal.invert())
+                collisionNormal.invert()
 
-                let tmp = collision.poly1.velocity
-                collision.poly1.velocity = collision.poly2.velocity
-                collision.poly2.velocity = tmp
             }
-            // collision.poly1.addToPosition()
+            collisionNormal.normalize()
+
+            let restitution = Math.min(poly1.restitution, poly2.restitution)
+
+            let j = -(1 + restitution) * VectorMath.dot(VectorMath.sub(poly2.velocity, poly1.velocity), collisionNormal)
+            j /= (1 / poly1.mass + 1 / poly2.mass)
+
+
+            poly1.velocity.sub(
+                collisionNormal.clone().mul(j / poly1.mass)
+            )
+            poly2.velocity.add(
+                collisionNormal.clone().mul(j / poly2.mass)
+            )
+
+            // console.log(poly1.velocity, poly2.velocity, collisionNormal.mag())
+            // collisionNormal.invert()
+            // console.log(poly1.velocity.mag())
         }
 
         this.collisionList.length = 0

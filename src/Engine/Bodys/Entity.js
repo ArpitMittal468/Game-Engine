@@ -7,7 +7,8 @@ export default class Entity {
         this.position = new Vector()
         this.velocity = new Vector()
         this.acceleration = new Vector()
-        this.mass = 0
+        this.mass = 1
+        this.restitution = 1
     }
 
     applyForce(vec) {

@@ -16,6 +16,13 @@ export default {
         return new Vector(vec1.X - vec2.X, vec1.Y - vec2.Y);
     },
     /**
+     * @param {Vector} vec1
+     * @param {Vector} vec2
+    */
+    dot(vec1, vec2) {
+        return vec1.X * vec2.X + vec1.Y * vec2.Y
+    },
+    /**
      * @param {Vector} vec
     */
     clone(vec) {

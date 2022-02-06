@@ -2,9 +2,9 @@ import ConvexPolygon from './ConvexPolygon';
 import Vector from '../Vectors/Vector';
 
 export default class NewBody extends ConvexPolygon {
-    constructor() {
-    
-        super(Math.random() * 500 + 10, 100, [
+    constructor(x, y) {
+
+        super(x, y, [
             [-20, -20],
             [20, -20],
             [20, 20],
@@ -12,9 +12,11 @@ export default class NewBody extends ConvexPolygon {
         ])
 
         this.rotationAllowed = true
-        this.rotationAngle = Math.random()/5
+        this.rotationAngle = Math.random() / 5
         this.wireFrameAllowed = true
         this.goingBack = false
+        // this.velocity.set(1, 0)
+        // this.acceleration.set(0, 0.1)
     }
 
     ping(ctx) {
