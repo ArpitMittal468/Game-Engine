@@ -1,17 +1,37 @@
+import ConvexPolygon from "./Bodys/ConvexPolygon";
 import Detector from "./Collisions/Detector";
 
-export class Engine {
+export default class Engine {
     constructor(canvasId, canvasWidht, canvasHeight) {
+
+        /**
+         * @type {HTMLElement}
+        */
         this.canvas = document.getElementById(canvasId);
+
+        if (this.canvas == null)
+            throw 'Canvas does not exsist with id : ' + canvasId
+
+        if (typeof canvasHeight !== 'number' || typeof canvasWidht !== 'number')
+            throw 'Canvas Dimensions must be in number'
+
+        if (canvasHeight < 0 || canvasWidht < 0)
+            throw 'Dimensions must be positive'
+
+        /**
+         * @type {number}
+        */
         this.canvasHeight = canvasHeight
+
+        /**
+         * @type {number}
+        */
         this.canvasWidht = canvasWidht
 
+        /**
+         * @type {CanvasRenderingContext2D}
+        */
         this._2dCtx = this.canvas.getContext("2d")
-        this.currentTime = 0
-        this.frameUpdateRefernce
-
-        // this.canvas.setAttribute('width', canvasWidht)
-        // this.canvas.setAttribute('height', canvasHeight)
 
         this.ratio = window.devicePixelRatio;
 
@@ -23,67 +43,85 @@ export class Engine {
         this.objectList = []
         this.engineStatus = 0
 
+        this.fps = 0
+        this.showFpsAllowed = true
         this.frameCounter = 0
+        this.fpsUpdateInterval = 0
+        this.frameUpdateAvailable = false
 
-        this.canvas.onmousemove = (ev) => EnvVariables.updateMousePosition(ev)
     }
 
     pushObj(obj) {
+        if (!(obj instanceof ConvexPolygon)) {
+            throw 'Object Must of be type ConvexPolygon'
+        }
         this.objectList.push(obj)
     }
 
-    updateNextFrame() {
-        // Clear the old frame
-        this._2dCtx.clearRect(0, 0, this.ratio * this.canvasWidht, this.ratio * this.canvasHeight)
+    updateNextFrame(currentTime) {
 
-        this.collisionDetection()
-
-        for (let i = 0; i < this.objectList.length; i++) {
-            this.objectList[i].ping(this._2dCtx)
+        if (this.frameUpdateAvailable) {
+            this.fps = parseInt(1000 / (currentTime - this.frameCounter))
+            this.frameUpdateAvailable = false
         }
 
-        this.frameCounter++
+        this.frameCounter = currentTime
+
+        for (let iter = 0; iter < 1; iter++) {
+
+            // Clear the old frame
+            this._2dCtx.clearRect(0, 0, this.ratio * this.canvasWidht, this.ratio * this.canvasHeight)
+
+            this.collisionDetection()
+
+            for (let i = 0; i < this.objectList.length; i++) {
+                this.objectList[i].ping(this._2dCtx)
+            }
+        }
+
+        if (this.showFpsAllowed)
+            this.showFps()
 
         if (this.engineStatus)
-            requestAnimationFrame(() => {
-                this.updateNextFrame()
+            requestAnimationFrame((currentTime) => {
+                this.updateNextFrame(currentTime)
             })
     }
 
     startEngine() {
 
         if (this.engineStatus == 0) {
+
             this.engineStatus = 1
             this.updateNextFrame()
+
+            this.fpsUpdateInterval = setInterval(
+                () => { this.frameUpdateAvailable = true },
+                1000
+            )
         }
 
-        // delete this
-        this.chosenInd = 0
-        addEventListener('keydown', (ev) => {
-            // console.log(ev.key)
-            if (ev.key == 'Tab')
-                this.chosenInd = (this.chosenInd + 1) % this.objectList.length;
-            else this.objectList[this.chosenInd].keyPress(ev.key)
-        })
     }
 
     stopEngine() {
         this.engineStatus = 0
+        clearInterval(this.fpsUpdateInterval)
     }
 
     collisionDetection() {
         Detector(this.objectList)
     }
-}
 
-export var EnvVariables = {
-    MouseX: 0,
-    MouseY: 0,
-    updateMousePosition({ offsetX, offsetY }) {
-        this.MouseX = offsetX * window.devicePixelRatio
-        this.MouseY = offsetY * window.devicePixelRatio
+    showFps() {
+
+        this._2dCtx.fillStyle = '#131313ab'
+        this._2dCtx.fillRect(0, 0, 70, 30)
+        this._2dCtx.fillStyle = '#2bfe41'
+        this._2dCtx.font = '15px monospace'
+        this._2dCtx.fillText(this.fps + 'FPS', 10, 20)
     }
 }
+
 
 // module.export = { GameEnige }
 
